@@ -1,5 +1,5 @@
 {
-  "name": "skills",
+  "name": "soblin-skills",
   "description": "Personal collection of Agent Skills maintained by soblin",
   "owner": {
     "name": "soblin",
@@ -7,7 +7,7 @@
   },
   "plugins": [
     {
-      "name": "skills",
+      "name": "soblin-skills",
       "description": "Personal collection of Agent Skills maintained by soblin",
       "source": "./",
       "author": {

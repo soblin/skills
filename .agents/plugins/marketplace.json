@@ -1,11 +1,11 @@
 {
-  "name": "skills",
+  "name": "soblin-skills",
   "interface": {
-    "displayName": "Skills"
+    "displayName": "soblin-skills"
   },
   "plugins": [
     {
-      "name": "skills",
+      "name": "soblin-skills",
       "source": {
         "source": "local",
         "path": "./"
