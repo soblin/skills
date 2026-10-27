@@ -1,0 +1,9 @@
+version: 1
+
+rules:
+  - expected: ，
+    pattern: 、
+    prh: 読点には「，」を使う
+  - expected: ．
+    pattern: 。
+    prh: 句点には「．」を使う

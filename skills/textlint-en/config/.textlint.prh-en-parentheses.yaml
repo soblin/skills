@@ -1,0 +1,18 @@
+version: 1
+
+rules:
+  # English style: one space before "(", none inside the parentheses,
+  # one space after ")" when more text follows.
+  # The plural suffix "(s)" (e.g. "file(s)") is exempt.
+  - expected: " ("
+    pattern: /(?<=[-A-Za-z0-9,.:;!?"'])\((?!s\))/
+    prh: put a space before an opening parenthesis
+  - expected: (
+    pattern: /\(\s+/
+    prh: do not pad the inside of parentheses
+  - expected: )
+    pattern: /\s+\)/
+    prh: do not pad the inside of parentheses
+  - expected: ") "
+    pattern: /(?<!\(s)\)(?=[A-Za-z0-9])/
+    prh: put a space after a closing parenthesis

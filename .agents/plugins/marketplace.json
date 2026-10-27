@@ -1,0 +1,15 @@
+{
+  "name": "skills",
+  "interface": {
+    "displayName": "Skills"
+  },
+  "plugins": [
+    {
+      "name": "skills",
+      "source": {
+        "source": "local",
+        "path": "./"
+      }
+    }
+  ]
+}

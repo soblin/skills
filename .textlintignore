@@ -1,0 +1,6 @@
+# excluded from textlint.
+skills/ja-technical-writing/SKILL.md
+# fixtures with intentional lint problems.
+tests/**
+# symlink to skills/; skip it to avoid linting the same files twice.
+.claude/skills/**

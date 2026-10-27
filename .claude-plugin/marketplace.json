@@ -1,0 +1,19 @@
+{
+  "name": "skills",
+  "description": "Personal collection of Agent Skills maintained by soblin",
+  "owner": {
+    "name": "soblin",
+    "email": "hilo.soblin@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "skills",
+      "description": "Personal collection of Agent Skills maintained by soblin",
+      "source": "./",
+      "author": {
+        "name": "soblin",
+        "email": "hilo.soblin@gmail.com"
+      }
+    }
+  ]
+}
