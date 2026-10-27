@@ -1,7 +1,7 @@
 # skills
 
 Personal collection of Agent Skills maintained by soblin.
-The repository is a plugin marketplace for Claude Code and Codex, and it ships one plugin, `skills`, that bundles every skill under [`skills/`](skills/):
+The repository is a plugin marketplace for Claude Code and Codex, and it ships one plugin, `soblin-skills`, that bundles every skill under [`skills/`](skills/):
 
 | Skill                                                  | Description                                               |
 | ------------------------------------------------------ | --------------------------------------------------------- |
@@ -12,25 +12,25 @@ The repository is a plugin marketplace for Claude Code and Codex, and it ships o
 
 ## claude
 
-Add this repository as a marketplace, then install the `skills` plugin from it:
+Add this repository as a marketplace, then install the `soblin-skills` plugin from it:
 
 ```sh
 claude plugin marketplace add soblin/skills
-claude plugin install skills@skills
+claude plugin install soblin-skills@soblin-skills
 ```
 
 Inside a Claude Code session, run the same steps as slash commands:
 
 ```text
 /plugin marketplace add soblin/skills
-/plugin install skills@skills
+/plugin install soblin-skills@soblin-skills
 ```
 
 ## codex
 
-Add this repository as a marketplace, then install the `skills` plugin from it:
+Add this repository as a marketplace, then install the `soblin-skills` plugin from it:
 
 ```sh
 codex plugin marketplace add soblin/skills
-codex plugin add skills@skills
+codex plugin add soblin-skills@soblin-skills
 ```

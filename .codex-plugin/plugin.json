@@ -1,5 +1,5 @@
 {
-  "name": "skills",
+  "name": "soblin-skills",
   "version": "0.0.1",
   "description": "Personal collection of Agent Skills maintained by soblin",
   "author": {
@@ -12,7 +12,7 @@
   "keywords": ["skills", "agent-harness"],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Skills",
+    "displayName": "soblin-skills",
     "shortDescription": "Personal collection of Agent Skills maintained by soblin",
     "longDescription": "Personal collection of Agent Skills maintained by soblin.",
     "developerName": "soblin",
