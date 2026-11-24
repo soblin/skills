@@ -24,3 +24,7 @@ When an agent creates a PR, it must
 - apply the [hooks](#hooks)
 - create the PR following `.github/pull_request_template.md`
 - submit it as a draft PR. Leave it draft until the maintainer opens it up, or until the user gives approval from the prompt and tells the agent to mark it as ready.
+
+### Release process
+
+Do not edit `"version"` in `.claude-plugin/plugin.json` or `.codex-plugin/plugin.json` by hand. Follow [Release](README.md#release).

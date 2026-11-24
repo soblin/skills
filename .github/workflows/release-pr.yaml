@@ -1,0 +1,106 @@
+# Open a PR that bumps "version" in the plugin manifests, and set it to auto-merge.
+# It runs by hand, or when a PR with a release:* label is merged.
+# The token comes from a GitHub App: commits and PRs made with GITHUB_TOKEN
+# do not trigger the required checks, so the PR could never merge.
+name: release-pr
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Part of the version to bump
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        required: true
+  pull_request_target:
+    types:
+      - closed
+
+concurrency:
+  group: release-pr
+
+permissions:
+  contents: read
+
+jobs:
+  release-pr:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged &&
+       (contains(github.event.pull_request.labels.*.name, 'release:major') ||
+        contains(github.event.pull_request.labels.*.name, 'release:minor') ||
+        contains(github.event.pull_request.labels.*.name, 'release:patch')))
+    runs-on: ubuntu-24.04
+    steps:
+      - id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Choose bump
+        id: bump
+        env:
+          INPUT: ${{ inputs.bump }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          if [ -n "$INPUT" ]; then
+            bump=$INPUT
+          else
+            for bump in major minor patch; do
+              [[ ",$LABELS," == *",release:$bump,"* ]] && break
+            done
+          fi
+          echo "bump=$bump" >>"$GITHUB_OUTPUT"
+
+      - name: Bump version
+        id: version
+        run: echo "version=$(.github/scripts/bump-version.sh '${{ steps.bump.outputs.bump }}')" >>"$GITHUB_OUTPUT"
+
+      - name: Commit to a release branch and open a PR
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+          VERSION: ${{ steps.version.outputs.version }}
+          SOURCE_PR: ${{ github.event.pull_request.number }}
+        run: |
+          branch="release/v$VERSION"
+          base_sha=$(git rev-parse HEAD)
+          gh api "repos/$GH_REPO/git/refs" -f ref="refs/heads/$branch" -f sha="$base_sha" >/dev/null
+
+          # createCommitOnBranch makes a commit that GitHub signs, which the ruleset requires.
+          bot="$APP_SLUG[bot]"
+          bot_id=$(gh api "users/$bot" --jq .id)
+          signoff="Signed-off-by: $bot <$bot_id+$bot@users.noreply.github.com>"
+          additions=$(for f in .claude-plugin/plugin.json .codex-plugin/plugin.json; do
+            jq -n --arg path "$f" --arg contents "$(base64 -w0 "$f")" '{path: $path, contents: $contents}'
+          done | jq -s .)
+          jq -n \
+            --arg repo "$GH_REPO" --arg branch "$branch" --arg oid "$base_sha" \
+            --arg headline "chore(release): v$VERSION" --arg body "$signoff" \
+            --argjson additions "$additions" \
+            '{query: "mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid } } }",
+              variables: {input: {
+                branch: {repositoryNameWithOwner: $repo, branchName: $branch},
+                expectedHeadOid: $oid,
+                message: {headline: $headline, body: $body},
+                fileChanges: {additions: $additions}}}}' |
+            gh api graphql --input - >/dev/null
+
+          if [ -n "$SOURCE_PR" ]; then
+            source="Triggered by #$SOURCE_PR."
+          else
+            source="Triggered by hand (${{ steps.bump.outputs.bump }})."
+          fi
+          url=$(gh pr create --base "${{ github.event.repository.default_branch }}" --head "$branch" \
+            --title "chore(release): v$VERSION" --label release \
+            --body "Bump the plugin version to \`$VERSION\`. $source When this PR is merged, the release workflow tags \`v$VERSION\` and creates a draft release.")
+          gh pr merge "$url" --auto --squash
