@@ -1,0 +1,5 @@
+{
+  "files": ["**", ".*/**"],
+  "ignorePaths": ["foo"],
+  "words": ["foo"]
+}
