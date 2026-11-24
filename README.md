@@ -3,12 +3,13 @@
 Personal collection of Agent Skills maintained by soblin.
 The repository is a plugin marketplace for Claude Code and Codex, and it ships one plugin, `soblin-skills`, that bundles every skill under [`skills/`](skills/):
 
-| Skill                                                  | Description                                               |
-| ------------------------------------------------------ | --------------------------------------------------------- |
-| [`github-markdown-math`](skills/github-markdown-math/) | Write LaTeX/KaTeX math in Markdown that renders on GitHub |
-| [`ja-technical-writing`](skills/ja-technical-writing/) | Writing rules for Japanese technical documents            |
-| [`textlint-en`](skills/textlint-en/)                   | Proofread English prose in Markdown with textlint         |
-| [`textlint-ja`](skills/textlint-ja/)                   | Proofread Japanese prose in Markdown with textlint        |
+| Skill                                                  | Description                                                       |
+| ------------------------------------------------------ | ----------------------------------------------------------------- |
+| [`github-markdown-math`](skills/github-markdown-math/) | Write LaTeX/KaTeX math in Markdown that renders on GitHub         |
+| [`init-pre-commit`](skills/init-pre-commit/)           | Add a pre-commit setup with hooks for the repository's file types |
+| [`ja-technical-writing`](skills/ja-technical-writing/) | Writing rules for Japanese technical documents                    |
+| [`textlint-en`](skills/textlint-en/)                   | Proofread English prose in Markdown with textlint                 |
+| [`textlint-ja`](skills/textlint-ja/)                   | Proofread Japanese prose in Markdown with textlint                |
 
 ## claude
 

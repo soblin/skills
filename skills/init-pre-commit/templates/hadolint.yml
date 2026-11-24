@@ -1,0 +1,11 @@
+failure-threshold: warning
+
+ignored:
+  # DL3008: require version for apt-get
+  - DL3008
+  # DL3009: require deleting the apt-get lists
+  - DL3009
+
+trustedRegistries:
+  - ghcr.io
+  - mcr.microsoft.com
