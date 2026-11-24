@@ -1,0 +1,44 @@
+# Label a PR by what it does under skills/: release:minor when it adds a skill,
+# release:patch when it changes one. A release:major label set by hand is kept.
+name: release-label
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+permissions:
+  pull-requests: write
+
+jobs:
+  release-label:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Set release label
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          files=$(gh api "repos/$GH_REPO/pulls/$PR/files" --paginate --jq '.[] | "\(.status) \(.filename)"')
+          if grep -qE '^added skills/[^/]+/SKILL\.md$' <<<"$files"; then
+            want=release:minor
+          elif grep -qE '^[a-z]+ skills/' <<<"$files"; then
+            want=release:patch
+          else
+            echo "no change under skills/"
+            exit 0
+          fi
+          if [[ ",$LABELS," == *",release:major,"* ]]; then
+            echo "release:major is set by hand; keep it"
+            exit 0
+          fi
+          for other in release:minor release:patch; do
+            if [ "$other" != "$want" ] && [[ ",$LABELS," == *",$other,"* ]]; then
+              gh pr edit "$PR" --remove-label "$other"
+            fi
+          done
+          gh pr edit "$PR" --add-label "$want"

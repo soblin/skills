@@ -1,0 +1,18 @@
+# Categories of the notes that `gh release create --generate-notes` writes.
+changelog:
+  exclude:
+    labels:
+      - release
+  categories:
+    - title: Breaking changes
+      labels:
+        - release:major
+    - title: New skills
+      labels:
+        - release:minor
+    - title: Skill updates
+      labels:
+        - release:patch
+    - title: Other changes
+      labels:
+        - "*"
